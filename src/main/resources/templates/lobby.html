@@ -34,6 +34,10 @@
       font-size: 2.5rem;
       margin: 0;
     }
+    header h1 a {
+      color: inherit;
+      text-decoration: none;
+    }
 
     .game-info {
       background: var(--panel);
@@ -171,8 +175,9 @@
 </head>
 <body>
 <header>
-    <h1>Dark Decoy</h1>
+    <h1><a href="/">Dark Decoy</a></h1>
 </header>
+
 
 <div class="game-info">
     <div class="game-code" th:text="'Game Code: ' + ${lobby.id}"></div>
