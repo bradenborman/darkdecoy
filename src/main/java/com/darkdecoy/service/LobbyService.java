@@ -31,15 +31,12 @@ public class LobbyService {
         Lobby lobby = lobbyRepository.findById(lobbyId)
                 .orElseThrow(() -> new IllegalArgumentException("Lobby not found"));
 
-        // Remove any stale player instance with same ID
         lobby.getPlayers().removeIf(p -> p.getId().equals(playerId));
-
-        // Add new or updated player
         Player player = new Player(playerId, name, false);
         lobby.getPlayers().add(player);
 
         lobbyRepository.save(lobby);
-        messagingTemplate.convertAndSend("/topic/lobbyUpdates", lobby);
+        messagingTemplate.convertAndSend("/topic/lobby/" + lobbyId, lobby); // scoped to lobby
         return lobby;
     }
 
@@ -57,25 +54,21 @@ public class LobbyService {
         lobby.setRoundHostId(roundHostId);
         lobby.setImpostorKnows(impostorKnows);
 
-        // Reset impostors
         lobby.getPlayers().forEach(p -> p.setImpostor(false));
 
-        // Filter out the round host (they're sitting out)
         List<Player> eligiblePlayers = new ArrayList<>();
         for (Player p : lobby.getPlayers()) {
             if (!p.getId().equals(roundHostId)) eligiblePlayers.add(p);
         }
 
-        // Pick one impostor among non-host players
         Player impostor = eligiblePlayers.get(new Random().nextInt(eligiblePlayers.size()));
         impostor.setImpostor(true);
 
-        // Save and notify clients
         lobbyRepository.save(lobby);
-        messagingTemplate.convertAndSend("/topic/gameStart", lobby);
-
+        messagingTemplate.convertAndSend("/topic/lobby/" + lobbyId + "/start", lobby); // scoped to lobby
         return lobby;
     }
+
 
     public Lobby getLobby(String id) {
         return lobbyRepository.findById(id).orElse(null);
