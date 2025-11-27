@@ -34,13 +34,12 @@ public class LobbyController {
 
         model.addAttribute("lobby", lobby);
         model.addAttribute("playerName", name);
-        model.addAttribute("playerId", playerId); // ✅ Add this line
+        model.addAttribute("playerId", playerId);
         model.addAttribute("modeDescription", getModeDescription(mode));
         model.addAttribute("modeDisplay", getModeDisplay(mode));
 
         return "lobby";
     }
-
 
     @PostMapping("/join")
     public String join(@RequestParam String name,
@@ -70,20 +69,16 @@ public class LobbyController {
                         @RequestParam String prompt,
                         @RequestParam(required = false) String decoyPrompt,
                         @RequestParam String playerId,
-                        @RequestParam(required = false, defaultValue = "true") boolean impostorKnows,
+                        @RequestParam(required = false, defaultValue = "false") boolean impostorKnows,
                         Model model) {
         try {
-            Lobby lobby = lobbyService.startGame(lobbyId, prompt, decoyPrompt, playerId, impostorKnows);
-            model.addAttribute("lobby", lobby);
-            model.addAttribute("playerId", playerId);
-            return "round";
+            lobbyService.startGame(lobbyId, prompt, decoyPrompt, playerId, impostorKnows);
+            return "redirect:/round?lobbyId=" + lobbyId + "&playerId=" + playerId;
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "error";
         }
     }
-
-
 
     private String getModeDescription(String mode) {
         return switch (mode) {
@@ -96,4 +91,5 @@ public class LobbyController {
     private String getModeDisplay(String mode) {
         return mode.equals("dark") ? "In the Dark" : "With Decoy";
     }
+
 }

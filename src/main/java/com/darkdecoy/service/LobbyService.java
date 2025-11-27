@@ -59,7 +59,7 @@ public class LobbyService {
         lobby.setDecoyPrompt(decoyPrompt);
         lobby.setGameStarted(true);
         lobby.setRoundHostId(roundHostId);
-        lobby.setImpostorKnows(impostorKnows); // NEW FLAG
+        lobby.setImpostorKnows(impostorKnows);
 
         // Reset impostors
         lobby.getPlayers().forEach(p -> p.setImpostor(false));

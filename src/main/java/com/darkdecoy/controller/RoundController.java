@@ -42,7 +42,7 @@ public class RoundController {
         Player player = playerOpt.get();
         boolean isRoundHost = playerId.equals(lobby.getRoundHostId());
         boolean isImpostor = player.isImpostor();
-        boolean impostorKnows = lobby.isImpostorKnows(); // NEW — always set this
+        boolean impostorKnows = lobby.isImpostorKnows();
 
         String visibleWord;
         String roleMessage;
