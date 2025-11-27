@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Dark Decoy — Your Word</title>
+    <style>
+    :root {
+      --accent: #00ffcc;
+      --secondary: #5c5cff;
+      --bg: #0d0d0d;
+      --panel: #181818;
+      --text: #f5f5f5;
+      --subtext: #aaa;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+    .card {
+      background: var(--panel);
+      padding: 2rem 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 0 25px rgba(255,255,255,0.08);
+      max-width: 500px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 2.2rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    h2 {
+      font-size: 1.6rem;
+      margin-top: 1rem;
+    }
+    .word {
+      margin: 1.5rem 0;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--secondary);
+      letter-spacing: 1px;
+    }
+    p {
+      color: var(--subtext);
+      margin-top: 1rem;
+    }
+    footer {
+      margin-top: 3rem;
+      font-size: 0.8rem;
+      color: var(--subtext);
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+    <h1>Dark Decoy</h1>
+    <h2 th:text="${roleMessage}"></h2>
+    <div class="word" th:text="${visibleWord}"></div>
+    <p th:if="${isImpostor}">Keep your cool. Try to blend in — they can’t know you’re faking it.</p>
+    <p th:if="${isRoundHost}">You submitted this round. Sit back and watch the chaos unfold.</p>
+    <p th:if="${!isImpostor and !isRoundHost}">Your job: find out who’s the impostor without giving away the word!</p>
+</div>
+
+<footer>
+    Dark Decoy © 2025 — Trust no one.
+</footer>
+</body>
+</html>
