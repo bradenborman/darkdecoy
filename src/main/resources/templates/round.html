@@ -60,6 +60,22 @@
       margin-top: 3rem;
       font-size: 0.8rem;
       color: var(--subtext);
+      text-align: center;
+    }
+    .new-round {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 0.8rem 1.4rem;
+      border-radius: 10px;
+      text-decoration: none;
+      background: var(--secondary);
+      color: #fff;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .new-round:hover {
+      background: #7878ff;
+      transform: translateY(-2px);
     }
     @media (max-width: 600px) {
       .card {
@@ -95,6 +111,8 @@
         <div class="word" th:text="${visibleWord}"></div>
         <p>Your job: find out who’s the impostor without giving away the word!</p>
     </div>
+
+    <a class="new-round" href="/">Start New Round</a>
 </div>
 
 <footer>

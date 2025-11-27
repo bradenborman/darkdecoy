@@ -12,97 +12,97 @@
       --text: #f5f5f5;
       --subtext: #aaa;
     }
-    *{box-sizing:border-box;}
-    body{
-      font-family:"Inter",Arial,sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      margin:0;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      min-height:100vh;
-      padding:2rem 1rem;
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Inter", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem 1rem;
     }
-    header{
-      text-align:center;
-      margin-bottom:2rem;
-      animation:fadeIn 0.8s ease;
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+      animation: fadeIn 0.8s ease;
     }
-    h1{
-      font-size:2.75rem;
-      color:#00ffcc;
-      margin:0;
+    h1 {
+      font-size: 2.75rem;
+      color: #00ffcc;
+      margin: 0;
     }
-    p.tagline{
-      color:var(--subtext);
-      margin-top:0.4rem;
-      font-size:1.05rem;
+    p.tagline {
+      color: var(--subtext);
+      margin-top: 0.4rem;
+      font-size: 1.05rem;
     }
-    main{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-      gap:2rem;
-      width:100%;
-      max-width:900px;
+    main {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      width: 100%;
+      max-width: 900px;
     }
-    .card{
-      background:var(--panel);
-      padding:1.8rem;
-      border-radius:16px;
-      box-shadow:0 0 20px rgba(255,255,255,0.05);
-      transition:transform 0.2s,box-shadow 0.2s;
+    .card {
+      background: var(--panel);
+      padding: 1.8rem;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    .card:hover{
-      transform:translateY(-3px);
-      box-shadow:0 0 30px rgba(255,255,255,0.08);
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 30px rgba(255,255,255,0.08);
     }
-    h2{
-      margin-top:0;
-      font-size:1.4rem;
-      text-align:center;
-      margin-bottom:1rem;
-      color:var(--accent);
+    h2 {
+      margin-top: 0;
+      font-size: 1.4rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      color: var(--accent);
     }
-    label{
-      display:block;
-      color:var(--subtext);
-      font-size:0.9rem;
-      margin-bottom:0.25rem;
+    label {
+      display: block;
+      color: var(--subtext);
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
     }
-    input,select,button{
-      width:100%;
-      padding:0.75rem 0.9rem;
-      border:none;
-      border-radius:8px;
-      font-size:1rem;
-      margin-bottom:1rem;
+    input, select, button {
+      width: 100%;
+      padding: 0.75rem 0.9rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      margin-bottom: 1rem;
     }
-    input,select{
-      background:#222;
-      color:var(--text);
+    input, select {
+      background: #222;
+      color: var(--text);
     }
-    button{
-      background:var(--accent);
-      color:white;
-      font-weight:600;
-      cursor:pointer;
-      transition:background 0.2s,transform 0.1s;
+    button {
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
     }
-    button:hover{
-      background:#7878ff;
-      transform:translateY(-1px);
+    button:hover {
+      background: #7878ff;
+      transform: translateY(-1px);
     }
-    footer{
-      margin-top:auto;
-      text-align:center;
-      color:var(--subtext);
-      font-size:0.8rem;
-      padding-top:2rem;
+    footer {
+      margin-top: auto;
+      text-align: center;
+      color: var(--subtext);
+      font-size: 0.8rem;
+      padding-top: 2rem;
     }
-    @keyframes fadeIn{
-      from{opacity:0;transform:translateY(10px);}
-      to{opacity:1;transform:translateY(0);}
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
@@ -116,16 +116,13 @@
     <!-- CREATE GAME -->
     <div class="card">
         <h2>Create a Game</h2>
-        <form action="/create" method="post">
-            <label for="name">Your Name</label>
-            <input id="name" name="name" placeholder="Enter your name" required>
-
+        <form id="createForm" action="/create" method="post">
+            <input type="hidden" id="createName" name="name" value="">
             <label for="mode">Game Mode</label>
             <select id="mode" name="mode" required>
                 <option value="dark">In the Dark 🕶️</option>
                 <option value="decoy">With Decoy 🎭</option>
             </select>
-
             <button type="submit">Create Game</button>
         </form>
         <p style="font-size:0.85rem;color:var(--subtext);text-align:center;">
@@ -137,16 +134,14 @@
     <!-- JOIN GAME -->
     <div class="card">
         <h2>Join a Game</h2>
-        <form action="/join" method="post">
-            <label for="joinName">Your Name</label>
-            <input id="joinName" name="name" placeholder="Enter your name" required>
-
+        <form id="joinForm" action="/join" method="post">
+            <input type="hidden" id="joinName" name="name" value="">
             <label for="lobbyId">Game Code</label>
-            <input id="lobbyId" name="lobbyId" placeholder="Enter 3-character code"
-                   maxlength="3" minlength="3" pattern="[A-Za-z0-9]{3}"
+            <input id="lobbyId" name="lobbyId"
+                   placeholder="Enter 3-character code"
+                   maxlength="3" minlength="3"
+                   pattern="[A-Za-z0-9]{3}"
                    style="text-transform:uppercase;" required>
-
-
             <button type="submit">Join Game</button>
         </form>
         <p style="font-size:0.85rem;color:var(--subtext);text-align:center;">
@@ -158,5 +153,22 @@
 <footer>
     Dark Decoy © 2025 — A social deception game for friends
 </footer>
+
+<script>
+  // Generate a random player ID (short unique string)
+  function generatePlayerId() {
+    const adjectives = ["Sneaky", "Clever", "Silent", "Bold", "Mysterious", "Witty", "Curious", "Chill", "Crafty", "Lucky"];
+    const animals = ["Fox", "Panda", "Owl", "Hawk", "Wolf", "Tiger", "Lynx", "Raven", "Koala", "Bear"];
+    const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+    const animal = animals[Math.floor(Math.random() * animals.length)];
+    const num = Math.floor(100 + Math.random() * 900); // 3-digit suffix
+    return `${adj}${animal}${num}`;
+  }
+
+  // Apply generated ID to both hidden name inputs
+  const randomName = generatePlayerId();
+  document.getElementById("createName").value = randomName;
+  document.getElementById("joinName").value = randomName;
+</script>
 </body>
 </html>

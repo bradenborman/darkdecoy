@@ -90,26 +90,13 @@
       color: var(--accent);
     }
 
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    li {
-      background: #222;
-      padding: 0.7rem 1rem;
-      border-radius: 8px;
+    .waiting {
+      background: var(--panel);
+      padding: 1rem;
+      border-radius: 10px;
       text-align: center;
-      font-weight: 500;
-      transition: background 0.2s;
-    }
-
-    li:hover {
-      background: #2a2a2a;
+      color: var(--subtext);
+      margin-top: 1rem;
     }
 
     form {
@@ -166,15 +153,6 @@
       cursor: pointer;
     }
 
-    .waiting {
-      background: var(--panel);
-      padding: 1rem;
-      border-radius: 10px;
-      text-align: center;
-      color: var(--subtext);
-      margin-top: 1rem;
-    }
-
     footer {
       color: var(--subtext);
       font-size: 0.8rem;
@@ -206,13 +184,9 @@
 
 <section class="card">
     <h3 id="playerCountHeader">
-        Players in Game (<span id="playerCount" th:text="${#lists.size(lobby.players)}">0</span>)
+        Players Connected: <span id="playerCount" th:text="${#lists.size(lobby.players)}">0</span>
     </h3>
     <p style="color:#777;font-size:0.9em;text-align:center;">⚠️ Don’t refresh — you’ll leave the game.</p>
-
-    <ul id="playerList">
-        <li th:each="p : ${lobby.players}" th:text="${p.name}"></li>
-    </ul>
 
     <div th:if="${lobby != null and playerId != null and playerId == lobby.hostId}">
         <form action="/start" method="post" th:if="${lobby != null and lobby.gameStarted != true}">
@@ -258,7 +232,7 @@
     stompClient.connect({}, () => {
       stompClient.subscribe('/topic/lobbyUpdates', (message) => {
         const lobby = JSON.parse(message.body);
-        if (lobby.id === lobbyId) updatePlayerList(lobby.players);
+        if (lobby.id === lobbyId) updatePlayerCount(lobby.players);
       });
       stompClient.subscribe('/topic/gameStart', (message) => {
         if (redirected) return;
@@ -271,17 +245,8 @@
     });
   }
 
-  function updatePlayerList(players) {
-    const list = document.getElementById("playerList");
-    list.innerHTML = "";
-    players.forEach(p => {
-      const li = document.createElement("li");
-      li.textContent = p.name;
-      list.appendChild(li);
-    });
-
+  function updatePlayerCount(players) {
     if (playerCount) playerCount.textContent = players.length;
-
     if (startButton) {
       if (players.length < 4) {
         startButton.disabled = true;
