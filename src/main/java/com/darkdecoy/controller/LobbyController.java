@@ -70,9 +70,10 @@ public class LobbyController {
                         @RequestParam String prompt,
                         @RequestParam(required = false) String decoyPrompt,
                         @RequestParam String playerId,
+                        @RequestParam(required = false, defaultValue = "true") boolean impostorKnows,
                         Model model) {
         try {
-            Lobby lobby = lobbyService.startGame(lobbyId, prompt, decoyPrompt, playerId);
+            Lobby lobby = lobbyService.startGame(lobbyId, prompt, decoyPrompt, playerId, impostorKnows);
             model.addAttribute("lobby", lobby);
             model.addAttribute("playerId", playerId);
             return "round";
@@ -81,6 +82,7 @@ public class LobbyController {
             return "error";
         }
     }
+
 
 
     private String getModeDescription(String mode) {

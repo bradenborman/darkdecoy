@@ -13,6 +13,7 @@ public class Lobby {
     private String hostId;
     private boolean gameStarted = false;
     private List<Player> players = new ArrayList<>();
+    private boolean impostorKnows = true;
     private String prompt;
     private String roundHostId;
     private String decoyPrompt;

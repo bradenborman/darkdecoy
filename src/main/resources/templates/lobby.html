@@ -149,6 +149,23 @@
       cursor: not-allowed;
     }
 
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+      color: var(--subtext);
+      margin-top: 0.3rem;
+      cursor: pointer;
+    }
+
+    .checkbox-container input[type="checkbox"] {
+      accent-color: var(--secondary);
+      width: 1.1rem;
+      height: 1.1rem;
+      cursor: pointer;
+    }
+
     .waiting {
       background: var(--panel);
       padding: 1rem;
@@ -202,9 +219,15 @@
             <input type="hidden" id="lobbyId" name="lobbyId" th:value="${lobby.id}">
             <input type="hidden" id="playerId" name="playerId" th:value="${playerId}">
             <input name="prompt" placeholder="Enter main word/prompt" required>
+
             <div th:if="${lobby.mode == 'decoy'}">
                 <input name="decoyPrompt" placeholder="Enter decoy word (for impostor)">
+                <label class="checkbox-container">
+                    <input type="checkbox" name="impostorKnows" checked>
+                    Impostor knows they’re the impostor
+                </label>
             </div>
+
             <button id="startButton" type="submit" disabled>Need 4+ players to start</button>
         </form>
     </div>

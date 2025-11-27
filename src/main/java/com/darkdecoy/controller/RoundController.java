@@ -42,24 +42,35 @@ public class RoundController {
         Player player = playerOpt.get();
         boolean isRoundHost = playerId.equals(lobby.getRoundHostId());
         boolean isImpostor = player.isImpostor();
+        boolean impostorKnows = lobby.isImpostorKnows(); // NEW — always set this
 
         String visibleWord;
         String roleMessage;
 
         if (isRoundHost) {
+            // Round host sits out
             visibleWord = "(none)";
             roleMessage = "You submitted this round — sit back and watch!";
         } else if (isImpostor) {
             if (lobby.getDecoyPrompt() != null && !lobby.getDecoyPrompt().isBlank()) {
                 visibleWord = lobby.getDecoyPrompt();
-                roleMessage = "You are the decoy impostor.";
+                if (impostorKnows) {
+                    roleMessage = "You are the decoy impostor.";
+                } else {
+                    roleMessage = "Your word for this round.";
+                }
             } else {
-                visibleWord = "(none)";
-                roleMessage = "You are the dark impostor. You have no word!";
+                // In the dark mode
+                visibleWord = lobby.getPrompt();
+                if (impostorKnows) {
+                    roleMessage = "You are the dark impostor. You have no word!";
+                } else {
+                    roleMessage = "Your word for this round.";
+                }
             }
         } else {
             visibleWord = lobby.getPrompt();
-            roleMessage = "You are a regular player. Try to spot the impostor!";
+            roleMessage = "Your word for this round.";
         }
 
         model.addAttribute("lobby", lobby);
@@ -68,9 +79,8 @@ public class RoundController {
         model.addAttribute("roleMessage", roleMessage);
         model.addAttribute("isImpostor", isImpostor);
         model.addAttribute("isRoundHost", isRoundHost);
+        model.addAttribute("impostorKnows", impostorKnows);
 
         return "round";
     }
-
-
 }

@@ -46,7 +46,7 @@ public class LobbyService {
         return lobby;
     }
 
-    public Lobby startGame(String lobbyId, String prompt, String decoyPrompt, String roundHostId) {
+    public Lobby startGame(String lobbyId, String prompt, String decoyPrompt, String roundHostId, boolean impostorKnows) {
         Lobby lobby = lobbies.get(lobbyId);
         if (lobby == null) throw new IllegalArgumentException("Lobby not found");
 
@@ -59,6 +59,7 @@ public class LobbyService {
         lobby.setDecoyPrompt(decoyPrompt);
         lobby.setGameStarted(true);
         lobby.setRoundHostId(roundHostId);
+        lobby.setImpostorKnows(impostorKnows); // NEW FLAG
 
         // Reset impostors
         lobby.getPlayers().forEach(p -> p.setImpostor(false));
