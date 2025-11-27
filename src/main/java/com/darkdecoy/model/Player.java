@@ -1,14 +1,24 @@
 package com.darkdecoy.model;
 
-import lombok.AllArgsConstructor;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
 public class Player {
+
+    @Id
     private String id;
     private String name;
-    private boolean impostor = false;
+    private boolean impostor;
+
+    public Player() {}
+
+    public Player(String id, String name, boolean impostor) {
+        this.id = id;
+        this.name = name;
+        this.impostor = impostor;
+    }
+
 }

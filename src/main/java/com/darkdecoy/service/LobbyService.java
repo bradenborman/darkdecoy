@@ -2,17 +2,18 @@ package com.darkdecoy.service;
 
 import com.darkdecoy.model.Lobby;
 import com.darkdecoy.model.Player;
+import com.darkdecoy.repository.LobbyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class LobbyService {
 
-    private final Map<String, Lobby> lobbies = new ConcurrentHashMap<>();
+    @Autowired
+    private LobbyRepository lobbyRepository;
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
@@ -22,35 +23,30 @@ public class LobbyService {
         Player host = new Player(hostId, hostName, false);
         Lobby lobby = new Lobby(id, hostId, mode);
         lobby.getPlayers().add(host);
-        lobbies.put(id, lobby);
+        lobbyRepository.save(lobby);
         return lobby;
     }
 
-
     public Lobby joinLobby(String lobbyId, String name, String playerId) {
-        Lobby lobby = lobbies.get(lobbyId);
-        if (lobby == null) throw new IllegalArgumentException("Lobby not found");
+        Lobby lobby = lobbyRepository.findById(lobbyId)
+                .orElseThrow(() -> new IllegalArgumentException("Lobby not found"));
 
-        Optional<Player> existing = lobby.getPlayers().stream()
-                .filter(p -> p.getId().equals(playerId))
-                .findFirst();
+        // Remove any stale player instance with same ID
+        lobby.getPlayers().removeIf(p -> p.getId().equals(playerId));
 
-        if (existing.isEmpty()) {
-            Player player = new Player(playerId, name, false);
-            lobby.getPlayers().add(player);
-        } else {
-            existing.get().setName(name);
-        }
+        // Add new or updated player
+        Player player = new Player(playerId, name, false);
+        lobby.getPlayers().add(player);
 
+        lobbyRepository.save(lobby);
         messagingTemplate.convertAndSend("/topic/lobbyUpdates", lobby);
         return lobby;
     }
 
     public Lobby startGame(String lobbyId, String prompt, String decoyPrompt, String roundHostId, boolean impostorKnows) {
-        Lobby lobby = lobbies.get(lobbyId);
-        if (lobby == null) throw new IllegalArgumentException("Lobby not found");
+        Lobby lobby = lobbyRepository.findById(lobbyId)
+                .orElseThrow(() -> new IllegalArgumentException("Lobby not found"));
 
-        // Must have at least 4 players now
         if (lobby.getPlayers().size() < 4) {
             throw new IllegalStateException("At least 4 players are required to start the game.");
         }
@@ -70,30 +66,31 @@ public class LobbyService {
             if (!p.getId().equals(roundHostId)) eligiblePlayers.add(p);
         }
 
-        // Pick one impostor among the non-host players
+        // Pick one impostor among non-host players
         Player impostor = eligiblePlayers.get(new Random().nextInt(eligiblePlayers.size()));
         impostor.setImpostor(true);
 
-        // Notify all clients to start the round
+        // Save and notify clients
+        lobbyRepository.save(lobby);
         messagingTemplate.convertAndSend("/topic/gameStart", lobby);
 
         return lobby;
     }
 
     public Lobby getLobby(String id) {
-        return lobbies.get(id);
+        return lobbyRepository.findById(id).orElse(null);
+    }
+
+    public boolean lobbyExists(String id) {
+        return lobbyRepository.existsById(id);
     }
 
     private String generateCode() {
         String code;
         do {
             code = UUID.randomUUID().toString().substring(0, 3).toUpperCase();
-        } while (lobbies.containsKey(code));
+        } while (lobbyRepository.existsById(code));
         return code;
     }
 
-
-    public boolean lobbyExists(String id) {
-        return lobbies.containsKey(id);
-    }
 }
