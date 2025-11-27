@@ -3,6 +3,3 @@ nixPkgs = ["jdk21", "gradle"]
 
 [phases.build]
 cmd = "./gradlew clean bootJar -x test"
-
-[start]
-cmd = "java -jar build/libs/darkdecoy-0.0.1-SNAPSHOT.jar"
