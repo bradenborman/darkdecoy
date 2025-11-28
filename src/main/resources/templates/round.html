@@ -12,6 +12,7 @@
       --panel: #181818;
       --text: #f5f5f5;
       --subtext: #aaa;
+       --danger: #ff4d4d;
     }
     body {
       background: var(--bg);
@@ -77,6 +78,14 @@
       background: #7878ff;
       transform: translateY(-2px);
     }
+
+    .impostor-alert {
+      color: var(--danger);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+
     @media (max-width: 600px) {
       .card {
         width: 95%;
@@ -100,7 +109,7 @@
 
     <!-- Impostor who knows -->
     <div th:if="${isImpostor and impostorKnows}">
-        <h2>You are the Impostor</h2>
+        <h2 class="impostor-alert">You are the Impostor</h2>
         <div class="word" th:text="${visibleWord}"></div>
         <p>Keep your cool. Try to blend in — they can’t know you’re faking it.</p>
     </div>
