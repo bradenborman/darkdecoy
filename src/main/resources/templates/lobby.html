@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Dark Decoy — Game Lobby</title>
+    <title>Dark Decoy - Game Lobby</title>
     <style>
     :root {
       --accent: #00ffcc;
@@ -12,6 +12,7 @@
       --panel: #181818;
       --text: #f5f5f5;
       --subtext: #aaa;
+      --danger: #ff4d4d;
     }
 
     * { box-sizing: border-box; }
@@ -86,7 +87,7 @@
       box-shadow: 0 0 10px rgba(255,255,255,0.05);
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 1.3rem;
     }
 
     h3 {
@@ -158,6 +159,33 @@
       cursor: pointer;
     }
 
+    .checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--subtext);
+  margin-top: 0.8rem;   /* was 0.3rem */
+  margin-bottom: 0.8rem; /* new spacing below */
+  cursor: pointer;
+}
+
+
+    .text-button {
+      background: transparent;
+      border-radius: 0;
+      border: none;
+      padding: 0;
+      color: var(--accent);
+      font-size: 0.95rem;
+      text-align: left;
+      text-decoration: underline;
+      cursor: pointer;
+      width: fit-content;
+      margin-top: 0.3rem;
+      margin-bottom: 0.4rem;
+    }
+
     footer {
       color: var(--subtext);
       font-size: 0.8rem;
@@ -171,6 +199,147 @@
         width: 95%;
         padding: 1.5rem;
       }
+    }
+
+    /* Bottom sheet modal */
+
+    .sheet-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 20;
+    }
+
+    .sheet-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .bottom-sheet {
+      position: fixed;
+      left: 50%;
+      transform: translate(-50%, 100%);
+      bottom: 0;
+      width: 100%;
+      max-width: 600px;
+      background: var(--panel);
+      border-radius: 16px 16px 0 0;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.7);
+      padding: 1rem 1.25rem 1.5rem;
+      z-index: 30;
+      transition: transform 0.25s ease;
+    }
+
+    .bottom-sheet.open {
+      transform: translate(-50%, 0);
+    }
+
+    .sheet-grabber {
+      width: 40px;
+      height: 4px;
+      border-radius: 999px;
+      background: #444;
+      margin: 0 auto 0.75rem auto;
+    }
+
+    .sheet-header {
+      text-align: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .sheet-header h4 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
+    .sheet-header p {
+      margin: 0.3rem 0 0 0;
+      font-size: 0.9rem;
+      color: var(--subtext);
+    }
+
+    .sheet-body {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .sheet-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .sheet-label {
+      font-size: 0.9rem;
+      color: var(--subtext);
+      text-align: left;
+    }
+
+    .sheet-select, .sheet-input {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 8px;
+      border: none;
+      background: #2b2b2b;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .sheet-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .sheet-buttons button {
+      flex: 1;
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+
+    .btn-secondary {
+      background: #2b2b2b;
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: #3a3a3a;
+    }
+
+    .sheet-result {
+      margin-top: 0.75rem;
+      padding: 0.7rem 0.8rem;
+      background: #202020;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      text-align: left;
+    }
+
+    .sheet-result-title {
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+    }
+
+    .sheet-result-item {
+      margin: 0.15rem 0;
+    }
+
+    .sheet-status {
+      font-size: 0.85rem;
+      color: var(--subtext);
+      margin-top: 0.5rem;
+      text-align: left;
+    }
+
+    .sheet-status.error {
+      color: var(--danger);
     }
   </style>
 </head>
@@ -191,23 +360,26 @@
     <h3 id="playerCountHeader">
         Players Connected: <span id="playerCount" th:text="${#lists.size(lobby.players)}">0</span>
     </h3>
-    <p style="color:#777;font-size:0.9em;text-align:center;">⚠️ Don’t refresh — you’ll leave the game.</p>
-
     <div th:if="${lobby != null and playerId != null and playerId == lobby.hostId}">
         <form action="/start" method="post" th:if="${lobby != null and lobby.gameStarted != true}">
             <input type="hidden" id="lobbyId" name="lobbyId" th:value="${lobby.id}">
             <input type="hidden" id="playerId" name="playerId" th:value="${playerId}">
-            <input name="prompt" placeholder="Enter main word/prompt" required>
+            <input id="promptInput" name="prompt" placeholder="Enter main word or prompt" required>
 
             <div th:if="${lobby.mode == 'decoy'}">
-                <input name="decoyPrompt" placeholder="Enter decoy word (for impostor)">
+                <input id="decoyInput" name="decoyPrompt" placeholder="Enter decoy word for impostor">
+
                 <label class="checkbox-container">
                     <input type="checkbox" name="impostorKnows" checked>
-                    Impostor knows they’re the impostor
+                    Impostor knows they are the impostor
                 </label>
+
+                <button type="button" id="openAutoSheet" class="text-button">
+                    Need help thinking of words?
+                </button>
             </div>
 
-            <button id="startButton" type="submit" disabled>Need 4+ players to start</button>
+            <button id="startButton" type="submit" disabled>Need 4 or more players to start</button>
         </form>
     </div>
 
@@ -217,12 +389,92 @@
 </section>
 
 <footer>
-    Dark Decoy © 2025 — A social deception game for friends
+    Dark Decoy © 2025
 </footer>
+
+<!-- Bottom sheet modal -->
+<div id="sheetOverlay" class="sheet-overlay"></div>
+
+<div id="autoSheet" class="bottom-sheet" aria-hidden="true">
+    <div class="sheet-grabber"></div>
+    <div class="sheet-header">
+        <h4>Let us pick your round</h4>
+        <p>Choose a category or type your own and we will generate a main and decoy word.</p>
+    </div>
+    <div class="sheet-body">
+        <div class="sheet-row">
+            <span class="sheet-label">Quick categories</span>
+            <select id="sheetCategorySelect" class="sheet-select">
+                <option value="">Choose a category</option>
+                <option>Custom category</option>
+                <option>Animals</option>
+                <option>Countries</option>
+                <option>US States</option>
+                <option>NFL Players</option>
+                <option>NBA Players</option>
+                <option>MLB Players</option>
+                <option>NHL Players</option>
+                <option>Famous Actors</option>
+                <option>Famous Singers</option>
+                <option>Famous Duos</option>
+                <option>Breakfast Foods</option>
+                <option>Vehicles</option>
+                <option>Brands</option>
+                <option>Cartoon Characters</option>
+                <option>Superheroes</option>
+                <option>Cities</option>
+                <option>Video Games</option>
+                <option>Animals With Fur</option>
+                <option>Sports Teams</option>
+            </select>
+        </div>
+
+        <div class="sheet-row">
+            <span class="sheet-label">Or type a custom category</span>
+            <input id="sheetCustomCategory" class="sheet-input" placeholder="Example: 90s sitcom characters">
+        </div>
+
+        <div class="sheet-row">
+            <button id="sheetGenerateBtn" type="button">Generate suggestion</button>
+            <div id="sheetStatus" class="sheet-status"></div>
+        </div>
+
+        <div id="sheetResult" class="sheet-result" style="display:none;">
+            <div class="sheet-result-title">Suggested round</div>
+            <div class="sheet-result-item" id="sheetRealText"></div>
+            <div class="sheet-result-item" id="sheetDecoyText"></div>
+        </div>
+
+        <div class="sheet-buttons">
+            <button id="sheetCloseBtn" type="button" class="btn-secondary">Close</button>
+            <button id="sheetRetryBtn" type="button" class="btn-secondary" disabled>Try again</button>
+            <button id="sheetAcceptBtn" type="button" disabled>Accept</button>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 <script>
+    let thinkingInterval = null;
+
+    function startThinkingAnimation() {
+      let dots = 0;
+      sheetStatus.textContent = "Thinking";
+      thinkingInterval = setInterval(() => {
+        dots = (dots + 1) % 4; // cycles 0..3
+        sheetStatus.textContent = "Thinking" + ".".repeat(dots);
+      }, 500);
+    }
+
+    function stopThinkingAnimation(message, isError = false) {
+      clearInterval(thinkingInterval);
+      thinkingInterval = null;
+      sheetStatus.textContent = message;
+      sheetStatus.classList.toggle("error", isError);
+    }
+
+
   const lobbyId = document.getElementById("lobbyId") ? document.getElementById("lobbyId").value : "[[${lobby.id}]]";
   const playerId = "[[${playerId}]]";
   const startButton = document.getElementById("startButton");
@@ -235,16 +487,13 @@
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, () => {
-      // Subscribe only to this lobby’s updates
       stompClient.subscribe(`/topic/lobby/${lobbyId}`, (message) => {
         const lobby = JSON.parse(message.body);
         updatePlayerCount(lobby.players);
       });
 
-      // Subscribe to this lobby’s game start signal
       stompClient.subscribe(`/topic/lobby/${lobbyId}/start`, (message) => {
         if (redirected) return;
-        const lobby = JSON.parse(message.body);
         redirected = true;
         window.location.href = `/round?lobbyId=${lobbyId}&playerId=${playerId}`;
       });
@@ -256,7 +505,7 @@
     if (startButton) {
       if (players.length < 4) {
         startButton.disabled = true;
-        startButton.textContent = "Need 4+ players to start";
+        startButton.textContent = "Need 4 or more players to start";
       } else {
         startButton.disabled = false;
         startButton.textContent = "Start Game";
@@ -265,6 +514,134 @@
   }
 
   connect();
+
+  // Bottom sheet logic
+
+  const openAutoSheetBtn = document.getElementById("openAutoSheet");
+  const sheetOverlay = document.getElementById("sheetOverlay");
+  const autoSheet = document.getElementById("autoSheet");
+
+  const sheetCategorySelect = document.getElementById("sheetCategorySelect");
+  const sheetCustomCategory = document.getElementById("sheetCustomCategory");
+  const sheetGenerateBtn = document.getElementById("sheetGenerateBtn");
+  const sheetCloseBtn = document.getElementById("sheetCloseBtn");
+  const sheetRetryBtn = document.getElementById("sheetRetryBtn");
+  const sheetAcceptBtn = document.getElementById("sheetAcceptBtn");
+  const sheetStatus = document.getElementById("sheetStatus");
+  const sheetResult = document.getElementById("sheetResult");
+  const sheetRealText = document.getElementById("sheetRealText");
+  const sheetDecoyText = document.getElementById("sheetDecoyText");
+
+  const promptInput = document.getElementById("promptInput");
+  const decoyInput = document.getElementById("decoyInput");
+
+  let lastSuggestion = null;
+  let isLoading = false;
+
+  function openSheet() {
+    autoSheet.classList.add("open");
+    sheetOverlay.classList.add("open");
+    autoSheet.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeSheet() {
+    autoSheet.classList.remove("open");
+    sheetOverlay.classList.remove("open");
+    autoSheet.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  openAutoSheetBtn.addEventListener("click", openSheet);
+  sheetOverlay.addEventListener("click", closeSheet);
+  sheetCloseBtn.addEventListener("click", closeSheet);
+
+  // Show custom category text ONLY if selected
+  sheetCategorySelect.addEventListener("change", () => {
+    if (sheetCategorySelect.value === "Custom category") {
+      sheetCustomCategory.style.display = "block";
+    } else {
+      sheetCustomCategory.style.display = "none";
+      sheetCustomCategory.value = "";
+    }
+  });
+
+  sheetCustomCategory.style.display = "none";
+
+  function getChosenCategory() {
+    if (sheetCategorySelect.value === "Custom category") {
+      return sheetCustomCategory.value.trim();
+    }
+    return sheetCategorySelect.value.trim();
+  }
+
+  async function requestSuggestion() {
+    const category = getChosenCategory();
+
+    if (!category) {
+      sheetStatus.textContent = "Choose a category first.";
+      sheetStatus.classList.remove("error");
+      return;
+    }
+
+    if (isLoading) return;
+    isLoading = true;
+
+   sheetStatus.classList.remove("error");
+    startThinkingAnimation();
+
+    sheetGenerateBtn.textContent = "Generating...";
+    sheetGenerateBtn.disabled = true;
+    sheetRetryBtn.disabled = true;
+    sheetAcceptBtn.disabled = true;
+    sheetResult.style.display = "none";
+
+    try {
+      const res = await fetch(`/api/auto?category=${encodeURIComponent(category)}`);
+      if (!res.ok) throw new Error("Bad response");
+
+      const data = await res.json();
+
+      const real = data.real || "Unknown";
+      const decoy = data.decoy || "Unknown";
+      const cat = data.category || category;
+
+      lastSuggestion = { real, decoy, category: cat };
+
+      sheetRealText.textContent = "Main: " + real;
+      sheetDecoyText.textContent = "Decoy: " + decoy;
+      sheetResult.style.display = "block";
+
+      stopThinkingAnimation("If you like it, Accept it or generate again.");
+
+      sheetAcceptBtn.disabled = false;
+      sheetRetryBtn.disabled = false;
+
+    } catch (err) {
+      stopThinkingAnimation("Could not generate right now. Try again.", true);
+
+      lastSuggestion = null;
+      sheetResult.style.display = "none";
+      sheetRetryBtn.disabled = false;
+    }
+
+    sheetGenerateBtn.textContent = "Generate suggestion";
+    sheetGenerateBtn.disabled = false;
+    isLoading = false;
+  }
+
+  sheetGenerateBtn.addEventListener("click", requestSuggestion);
+  sheetRetryBtn.addEventListener("click", requestSuggestion);
+
+  sheetAcceptBtn.addEventListener("click", () => {
+    if (!lastSuggestion) return;
+
+    promptInput.value = lastSuggestion.real;
+    decoyInput.value = lastSuggestion.decoy;
+
+    closeSheet();
+  });
 </script>
+
 </body>
 </html>

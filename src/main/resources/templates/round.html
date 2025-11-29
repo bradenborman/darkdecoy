@@ -12,7 +12,7 @@
       --panel: #181818;
       --text: #f5f5f5;
       --subtext: #aaa;
-       --danger: #ff4d4d;
+      --danger: #ff4d4d;
     }
     body {
       background: var(--bg);
@@ -57,11 +57,10 @@
       margin-top: 1rem;
       line-height: 1.4;
     }
-    footer {
-      margin-top: 3rem;
-      font-size: 0.8rem;
-      color: var(--subtext);
-      text-align: center;
+    .category-label {
+      margin-top: 0.5rem;
+      color: var(--accent);
+      font-weight: 600;
     }
     .new-round {
       display: inline-block;
@@ -78,14 +77,17 @@
       background: #7878ff;
       transform: translateY(-2px);
     }
-
     .impostor-alert {
       color: var(--danger);
       font-weight: 700;
       letter-spacing: 0.5px;
     }
-
-
+    footer {
+      margin-top: 3rem;
+      font-size: 0.8rem;
+      color: var(--subtext);
+      text-align: center;
+    }
     @media (max-width: 600px) {
       .card {
         width: 95%;
@@ -100,32 +102,38 @@
 <body>
 <div class="card">
     <h1>Dark Decoy</h1>
+
+    <!-- Category shown only if not null -->
+    <div th:if="${category != null}">
+        <p class="category-label">Category: <span th:text="${category}"></span></p>
+    </div>
+
     <!-- Host view -->
     <div th:if="${isRoundHost}">
         <h2>You submitted this round</h2>
         <div class="word">Sit back and watch</div>
-        <p>You’re the host this round — enjoy the chaos as everyone debates!</p>
+        <p>You are the host this round. Enjoy the chaos.</p>
     </div>
 
     <!-- Impostor who knows -->
     <div th:if="${isImpostor and impostorKnows}">
         <h2 class="impostor-alert">You are the Impostor</h2>
         <div class="word" th:text="${visibleWord}"></div>
-        <p>Keep your cool. Try to blend in — they can’t know you’re faking it.</p>
+        <p>Keep your cool. Try to blend in. They cannot know you are faking it.</p>
     </div>
 
-    <!-- Everyone else (regular players AND impostor who doesn’t know) -->
+    <!-- Everyone else -->
     <div th:if="${(!isImpostor and !isRoundHost) or (isImpostor and !impostorKnows)}">
         <h2>Your Word</h2>
         <div class="word" th:text="${visibleWord}"></div>
-        <p>Your job: find out who’s the impostor without giving away the word!</p>
+        <p>Your job is to find out who is the impostor without giving away the word.</p>
     </div>
 
     <a class="new-round" href="/">Start New Round</a>
 </div>
 
 <footer>
-    Dark Decoy © 2025 — Trust no one.
+    Dark Decoy © 2025
 </footer>
 </body>
 </html>
