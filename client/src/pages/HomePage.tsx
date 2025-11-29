@@ -172,12 +172,10 @@ export default function HomePage() {
 
   return (
     <div className="home-root">
-      <header>
-        <h1>Dark Decoy</h1>
-        <p className="tagline">
-          Deception meets intuition. Play with friends and see who you can trust.
-        </p>
-      </header>
+    <header className="home-header">
+      <h1>Dark Decoy</h1>
+      <div className="header-accent"></div>
+    </header>
 
       <main>
         {/* CREATE GAME */}
@@ -252,7 +250,7 @@ export default function HomePage() {
         </div>
 
         {/* JOIN GAME */}
-        <div className="card">
+        <div className={`card join-card ${showSettings ? "fade-out" : ""}`}>
           <h2>Join a Game</h2>
           <form onSubmit={handleJoinGame}>
             <label>Game Code</label>
