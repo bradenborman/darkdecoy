@@ -208,7 +208,7 @@ export default function HomePage() {
               <input
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                placeholder="Lebron James"
+                placeholder="Most people will get this word"
                 required
               />
 
@@ -218,7 +218,7 @@ export default function HomePage() {
                   <input
                     value={decoyPrompt}
                     onChange={(e) => setDecoyPrompt(e.target.value)}
-                    placeholder="Dwyane Wade"
+                    placeholder="Odd person out gets this word"
                   />
 
                   {/* Checkbox */}
