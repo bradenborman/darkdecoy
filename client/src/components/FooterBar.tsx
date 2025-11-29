@@ -1,3 +1,3 @@
 export default function FooterBar() {
-  return <footer>Dark Decoy © 2025</footer>;
+  return <footer>Dark Decoy | Braden Borman ©2025</footer>;
 }

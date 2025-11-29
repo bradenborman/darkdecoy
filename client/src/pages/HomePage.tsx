@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createLobby, joinLobby } from "@api/lobbyApi";
+import FooterBar from "@components/FooterBar";
 import "@styles/home.scss";
 
 type GameMode = "dark" | "decoy";
@@ -277,7 +278,7 @@ export default function HomePage() {
 
       {error && <div className="home-error">{error}</div>}
 
-      <footer>Dark Decoy © 2025</footer>
+      <FooterBar />
 
       {/* AI BOTTOM SHEET */}
       {sheetOpen && (
