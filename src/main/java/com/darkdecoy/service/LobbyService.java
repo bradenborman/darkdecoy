@@ -81,10 +81,13 @@ public class LobbyService {
         lobby.setGameStarted(true);
         lobby.setRoundHostId(hostId);
 
-        // clear impostor marks first
-        lobby.getPlayers().forEach(p -> p.setImpostor(false));
+        // clear impostor marks and previous assignments
+        lobby.getPlayers().forEach(p -> {
+            p.setImpostor(false);
+            p.setAssignedWord(null);
+        });
 
-        // impostor cannot be host
+        // determine eligible impostors (host cannot be impostor)
         List<Player> eligibleImpostors = new ArrayList<>();
         for (Player p : lobby.getPlayers()) {
             if (!p.getId().equals(hostId)) {
@@ -92,15 +95,28 @@ public class LobbyService {
             }
         }
 
+        // randomly select impostor
         Player impostor = eligibleImpostors.get(
                 new Random().nextInt(eligibleImpostors.size())
         );
-
         impostor.setImpostor(true);
 
+        // assign words
+        String realWord = lobby.getPrompt();
+        String decoyWord = lobby.getDecoyPrompt();
+
+        for (Player p : lobby.getPlayers()) {
+            if (p.isImpostor()) {
+                p.setAssignedWord(decoyWord);
+            } else {
+                p.setAssignedWord(realWord);
+            }
+        }
+
+        // persist lobby and players
         lobbyRepository.save(lobby);
 
-        // notify all connected players that game has started
+        // notify all clients game started
         messagingTemplate.convertAndSend("/topic/lobby/" + lobbyId + "/start", lobby);
 
         return lobby;
@@ -124,6 +140,27 @@ public class LobbyService {
             code = UUID.randomUUID().toString().substring(0, 3).toUpperCase();
         } while (lobbyRepository.existsById(code));
         return code;
+    }
+
+
+    public Map<String, Object> getPlayerWord(String lobbyId, String playerId) {
+        Lobby lobby = lobbyRepository.findById(lobbyId)
+                .orElseThrow(() -> new IllegalArgumentException("Lobby not found"));
+
+        if (!lobby.isGameStarted()) {
+            throw new IllegalStateException("Game has not started yet.");
+        }
+
+        Player player = lobby.getPlayers().stream()
+                .filter(p -> p.getId().equals(playerId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Invalid player ID."));
+
+        return Map.of(
+                "name", player.getName(),
+                "impostor", player.isImpostor(),
+                "assignedWord", player.getAssignedWord() == null ? "" : player.getAssignedWord()
+        );
     }
 
 }

@@ -5,8 +5,11 @@ import com.darkdecoy.model.Lobby;
 import com.darkdecoy.model.Player;
 import com.darkdecoy.model.RoundResponse;
 import com.darkdecoy.service.LobbyService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -134,6 +137,18 @@ public class LobbyController {
                 visibleWord,
                 ""
         );
+    }
+
+    @GetMapping("/lobby/{lobbyId}/player/{playerId}/word")
+    public ResponseEntity<?> getPlayerWord(@PathVariable String lobbyId, @PathVariable String playerId) {
+        try {
+            Map<String, Object> playerInfo = lobbyService.getPlayerWord(lobbyId, playerId);
+            return ResponseEntity.ok(playerInfo);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
     }
 
 

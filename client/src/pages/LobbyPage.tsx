@@ -31,11 +31,11 @@ export default function LobbyPage() {
 
   const playerCount = lobby?.players?.length ?? 0;
   const canStart = playerCount >= 4;
-
-  // If round has been loaded we treat the game as started
   const roundStarted = !!round;
 
-  // Load lobby on mount
+  // ---------------------------
+  // LOAD LOBBY ON MOUNT
+  // ---------------------------
   useEffect(() => {
     if (!lobbyId) return;
 
@@ -46,15 +46,39 @@ export default function LobbyPage() {
 
         const data = (await res.json()) as Lobby;
         setLobby(data);
+
+        // If game already started, try to restore player's word
+        if (data.gameStarted && playerId) {
+          const wordRes = await fetch(
+            `/api/lobby/lobby/${lobbyId}/player/${playerId}/word`
+          );
+
+          if (wordRes.ok) {
+            const info = await wordRes.json();
+
+            setRound({
+              category: "", // you can set if you have one
+              isRoundHost: data.roundHostId === playerId,
+              isImpostor: info.impostor,
+              impostorKnows: data.impostorKnows,
+              visibleWord: info.assignedWord
+            });
+          } else {
+            const errText = await wordRes.text();
+            setError(errText || "Invalid player or game not started.");
+          }
+        }
       } catch {
         setError("Lobby not found or expired.");
       }
     }
 
     loadLobby();
-  }, [lobbyId]);
+  }, [lobbyId, playerId]);
 
-  // WebSockets
+  // ---------------------------
+  // WEBSOCKETS
+  // ---------------------------
   useEffect(() => {
     if (!lobbyId) return;
 
@@ -65,7 +89,7 @@ export default function LobbyPage() {
     });
 
     stompClient.onConnect = () => {
-      // When lobby updates (players join / leave)
+      // Lobby updates (join/leave)
       stompClient.subscribe(`/topic/lobby/${lobbyId}`, (msg) => {
         try {
           const updatedLobby = JSON.parse(msg.body) as Lobby;
@@ -75,16 +99,11 @@ export default function LobbyPage() {
         }
       });
 
-      // When game begins
+      // Game start event
       stompClient.subscribe(`/topic/lobby/${lobbyId}/start`, async (msg) => {
         try {
-          // Update lobby from the message so gameStarted etc are correct
-          try {
-            const startedLobby = JSON.parse(msg.body) as Lobby;
-            setLobby(startedLobby);
-          } catch (e) {
-            console.error("Failed to parse lobby start payload", e);
-          }
+          const startedLobby = JSON.parse(msg.body) as Lobby;
+          setLobby(startedLobby);
 
           const res = await fetch(
             `/api/lobby/round-info?lobbyId=${lobbyId}&playerId=${playerId}`
@@ -107,7 +126,9 @@ export default function LobbyPage() {
     };
   }, [lobbyId, playerId]);
 
-  // Host starts the game
+  // ---------------------------
+  // HOST START GAME
+  // ---------------------------
   async function handleStart(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     if (!canStart || loadingStart) return;
@@ -127,7 +148,7 @@ export default function LobbyPage() {
       });
 
       if (!res.ok) throw new Error();
-      // Round will load via websocket subscription
+      // round loads through websocket
     } catch (e) {
       console.error(e);
       setError("Could not start game.");
@@ -140,7 +161,9 @@ export default function LobbyPage() {
     navigate("/");
   }
 
+  // ---------------------------
   // ERROR VIEW
+  // ---------------------------
   if (error) {
     return (
       <div className="lobby-root">
@@ -150,7 +173,9 @@ export default function LobbyPage() {
     );
   }
 
-  // LOADING LOBBY
+  // ---------------------------
+  // LOADING VIEW
+  // ---------------------------
   if (!lobby) {
     return (
       <div className="lobby-root">
@@ -160,7 +185,9 @@ export default function LobbyPage() {
     );
   }
 
+  // ---------------------------
   // ROUND VIEW
+  // ---------------------------
   if (roundStarted && round) {
     const {
       category,
@@ -220,58 +247,56 @@ export default function LobbyPage() {
     );
   }
 
- // NORMAL LOBBY VIEW
- return (
-   <div className="lobby-root">
-     <LobbyHeader />
+  // ---------------------------
+  // NORMAL LOBBY VIEW
+  // ---------------------------
+  return (
+    <div className="lobby-root">
+      <LobbyHeader />
 
-     <div className="lobby-card">
-      <div className="lobby-code-wrapper">
-        <div className="lobby-code-label">Game Code</div>
-        <div className="lobby-code-display">{lobby.id}</div>
+      <div className="lobby-card">
+        <div className="lobby-code-wrapper">
+          <div className="lobby-code-label">Game Code</div>
+          <div className="lobby-code-display">{lobby.id}</div>
+        </div>
+
+        <div className="lobby-details">
+          <p className="lobby-mode">
+            <strong>Mode:</strong>{" "}
+            {lobby.mode === "decoy" ? "With Decoy" : "In the Dark"}
+          </p>
+
+          <p className="lobby-description">
+            {lobby.mode === "decoy"
+              ? "Everyone gets a word, but one player gets a decoy word that is close but not quite right. Try to spot who is faking it."
+              : "Everyone gets the same word except one player who gets NOTHING. They are completely in the dark — try to find them."}
+          </p>
+        </div>
+
+        <h3 className="player-count">{playerCount} players connected</h3>
+
+        {isHost ? (
+          <div className="start-container">
+            {!canStart ? (
+              <button className="disabled-button" disabled>
+                Need 4 or more players to start
+              </button>
+            ) : (
+              <button
+                className="start-button"
+                onClick={handleStart}
+                disabled={loadingStart}
+              >
+                {loadingStart ? "Starting..." : "Start Game"}
+              </button>
+            )}
+          </div>
+        ) : (
+          <p className="waiting-message">Waiting for host to start...</p>
+        )}
       </div>
 
-
-       <div className="lobby-details">
-         <p className="lobby-mode">
-           <strong>Mode:</strong>{" "}
-           {lobby.mode === "decoy" ? "With Decoy" : "In the Dark"}
-         </p>
-
-         <p className="lobby-description">
-           {lobby.mode === "decoy"
-             ? "Everyone gets a word, but one player gets a decoy word that is close but not quite right. Try to spot who is faking it."
-             : "Everyone gets the same word except one player who gets NOTHING. They are completely in the dark — try to find them."}
-         </p>
-       </div>
-
-       <h3 className="player-count">{playerCount} players connected</h3>
-
-       {isHost ? (
-         <div className="start-container">
-           {!canStart ? (
-             <button className="disabled-button" disabled>
-               Need 4 or more players to start
-             </button>
-           ) : (
-             <button
-               className="start-button"
-               onClick={handleStart}
-               disabled={loadingStart}
-             >
-               {loadingStart ? "Starting..." : "Start Game"}
-             </button>
-           )}
-         </div>
-       ) : (
-         <p className="waiting-message">Waiting for host to start...</p>
-       )}
-     </div>
-
-     <FooterBar />
-   </div>
- );
-
-
-
+      <FooterBar />
+    </div>
+  );
 }
