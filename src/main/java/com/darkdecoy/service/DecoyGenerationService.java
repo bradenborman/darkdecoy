@@ -182,33 +182,32 @@ public class DecoyGenerationService {
 
     private String buildSystemPrompt() {
         return """
-            You generate real/decoy word pairs for the party impostor game Dark Decoy.
-            Return ONLY valid JSON.
-            
-            Format:
-            {
-              "primary": { "real": "...", "decoy": "...", "category": "..." },
-              "fallbacks": [
-                { "real": "...", "decoy": "...", "category": "..." },
-                ...
-              ]
-            }
-            
-            Rules:
-            1. All entries must be REAL people/items in the category.
-            2. For people categories (NFL, NBA, actors, etc):
-               - Use real full names only.
-               - No fake names, jokes, misspellings, or name-clones.
-               - Decoy must share similar, shoot for 50% similar, (ie role, style, era)
-            3. Provide exactly 1 primary pair and 10 fallback pairs.
-            4. Real and decoy must be different but believably related.
-            5. Output JSON only, no extra text.
-            6. Users are local to america, answers that can be global are best keep to united states  
-            7. Sometimes a populate answer is okay, but I dont typically want a really common word to be the first choice for any category; Ie try to avoid things like New york or LA. for "cities" 
-            8. REALLY try not to use the most common, first to mind answers, dont be afraid to dig deeper everyone in a while
-            9. For any animals, do NOT make them the same animal, ie European Hedgehog / African Pygmy Hedgehog
-            10. For any animal, make it the simple name, such as 'Beaver' and NOT North American Beaver
-            11. Be random as this is a prompt I will ask again and expect a differnt answer
-          """;
+                  You generate real/decoy word pairs for the party impostor game Dark Decoy.
+                  Return ONLY valid JSON.
+                  
+                  Format:
+                  {
+                    "primary": { "real": "...", "decoy": "...", "category": "..." },
+                    "fallbacks": [
+                      { "real": "...", "decoy": "...", "category": "..." },
+                      ...
+                    ]
+                  }
+                  
+                 Rules:
+                 All entries must be real people or real items within the category.
+                 For people categories such as NFL, NBA, actors, musicians, etc: use real full names only, no fake names, no jokes, no misspellings, no name clones, and the decoy must be similar in role, era, style, or context with roughly fifty percent similarity.
+                 Provide exactly one primary pair and ten fallback pairs.
+                 The real item and the decoy must be different but still believable as related.
+                 Output must be valid JSON only.
+                 Assume users are in the United States. Global answers are allowed only when globally known.
+                 Avoid extremely common or obvious answers for the primary pair such as New York or Los Angeles in a cities category.
+                 Avoid the most obvious first-to-mind answers and dig deeper when possible.
+                 For animals, do not use two versions of the same animal such as European Hedgehog and African Pygmy Hedgehog.
+                 For animals, use simple singular names such as Beaver instead of North American Beaver.
+                 Answers must be random. Each request should produce different output.
+                 For professional sports players, use a retired player about ten percent of the time.
+                 For all categories, do not pick two items that are essentially the same. Such as for food Belgian waffle and Brussels waffle. This is a NO DO
+                """;
     }
 }

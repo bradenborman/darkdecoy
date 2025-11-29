@@ -1,4 +1,3 @@
-/* Root colors */
 :root {
   --accent: #00ffcc;
   --secondary: #5c5cff;
@@ -9,7 +8,6 @@
   --danger: #ff4d4d;
 }
 
-/* Page wrapper */
 .home-root {
   width: 100%;
   max-width: 960px;
@@ -22,7 +20,6 @@
 }
 
 /* Header */
-/* Header redesign */
 .home-header {
   text-align: center;
   margin-top: 0.5rem;
@@ -52,12 +49,17 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-
-/* Main content layout */
+/* Layout */
 main {
   width: 100%;
   display: grid;
@@ -65,15 +67,13 @@ main {
   justify-content: center;
 }
 
-/* Desktop 2-column layout */
 @media (min-width: 750px) {
   main {
     grid-template-columns: 1fr 1fr;
-    max-width: 900px;
   }
 }
 
-/* Cards */
+/* Card styling */
 .card {
   background: var(--panel);
   padding: 2rem;
@@ -94,7 +94,29 @@ main {
   font-weight: 700;
 }
 
-/* Fade-out animation */
+/* -------------------------- */
+/* NEW ANIMATION FOR CENTERING */
+/* -------------------------- */
+
+.create-card {
+  transition: transform 0.4s ease;
+}
+
+/* Between 750 and 959px wide: container = viewport */
+@media (min-width: 750px) and (max-width: 959.98px) {
+  .create-card.move-center {
+    transform: translateX(25vw);
+  }
+}
+
+/* At 960px and up: container is fixed 960px and centered */
+@media (min-width: 960px) {
+  .create-card.move-center {
+    transform: translateX(240px);
+  }
+}
+
+/* Fade-out join card */
 .join-card {
   transition: opacity 0.35s ease, transform 0.35s ease;
 }
@@ -102,10 +124,10 @@ main {
 .join-card.fade-out {
   opacity: 0;
   transform: translateY(10px);
-  pointer-events: none; /* makes it unclickable */
+  pointer-events: none;
 }
 
-/* Inputs, buttons */
+/* Forms etc */
 form {
   display: flex;
   flex-direction: column;
@@ -165,7 +187,6 @@ button:disabled {
   }
 }
 
-/* Text button */
 .text-button {
   background: transparent;
   color: var(--accent);
@@ -177,14 +198,12 @@ button:disabled {
   margin: 0.2rem 0 0.4rem;
 }
 
-/* Join card subtext */
 .help-text {
   color: var(--subtext);
   font-size: 0.9rem;
   text-align: center;
 }
 
-/* Error */
 .home-error {
   color: var(--danger);
   margin-top: 1rem;
@@ -193,17 +212,13 @@ button:disabled {
   font-size: 1rem;
 }
 
-/* Footer */
 footer {
   margin-top: 1.5rem;
   color: var(--subtext);
   font-size: 0.85rem;
 }
 
-/* ------------------------------------------------------ */
-/* BOTTOM SHEET (unchanged functionally) */
-/* ------------------------------------------------------ */
-
+/* Bottom sheet - unchanged */
 .sheet-overlay {
   position: fixed;
   inset: 0;
@@ -267,6 +282,7 @@ footer {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  padding-bottom: 2rem;
 }
 
 .sheet-row {
@@ -332,7 +348,6 @@ footer {
   color: var(--subtext);
 }
 
-/* Mobile tweaks */
 @media (max-width: 600px) {
   .card {
     padding: 1.6rem;

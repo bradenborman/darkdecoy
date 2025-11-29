@@ -23,12 +23,10 @@ export default function HomePage() {
 
   const navigate = useNavigate();
 
-  // simple name generator
   useEffect(() => {
     setRandomName("Player" + Math.floor(1000 + Math.random() * 9000));
   }, []);
 
-  // submit final lobby creation
   async function handleCreateLobby(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
@@ -57,7 +55,6 @@ export default function HomePage() {
     }
   }
 
-  // join lobby
   async function handleJoinGame(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
@@ -76,7 +73,7 @@ export default function HomePage() {
         "/lobby?lobbyId=" +
           encodeURIComponent(lobby.id) +
           "&playerId=" +
-         encodeURIComponent(playerId)
+          encodeURIComponent(playerId)
       );
     } catch (err) {
       console.error(err);
@@ -87,7 +84,7 @@ export default function HomePage() {
   }
 
   // ------------------------------------------------------------------
-  // AI BOTTOM SHEET LOGIC
+  // AI Bottom Sheet Logic
   // ------------------------------------------------------------------
 
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -116,7 +113,6 @@ export default function HomePage() {
     return sheetCategory.trim();
   }
 
-  // thinking animation
   function startThinking() {
     let dots = 0;
     setSheetStatus("Thinking");
@@ -168,18 +164,20 @@ export default function HomePage() {
     closeSheet();
   }
 
-  // ------------------------------------------------------------------
-
   return (
     <div className="home-root">
-    <header className="home-header">
-      <h1>Dark Decoy</h1>
-      <div className="header-accent"></div>
-    </header>
+      <header className="home-header">
+        <h1>Dark Decoy</h1>
+        <div className="header-accent"></div>
+      </header>
 
       <main>
         {/* CREATE GAME */}
-        <div className="card">
+        <div
+          className={`card create-card ${
+            showSettings ? "move-center" : ""
+          }`}
+        >
           <h2>Create a Game</h2>
 
           {!showSettings && (
@@ -221,7 +219,6 @@ export default function HomePage() {
                     placeholder="Odd person out gets this word"
                   />
 
-                  {/* Checkbox */}
                   <div className="checkbox-container">
                     <input
                       type="checkbox"
@@ -231,7 +228,6 @@ export default function HomePage() {
                     <span>Impostor knows the word</span>
                   </div>
 
-                  {/* AI helper */}
                   <button
                     type="button"
                     onClick={openSheet}
@@ -250,7 +246,9 @@ export default function HomePage() {
         </div>
 
         {/* JOIN GAME */}
-        <div className={`card join-card ${showSettings ? "fade-out" : ""}`}>
+        <div
+          className={`card join-card ${showSettings ? "fade-out" : ""}`}
+        >
           <h2>Join a Game</h2>
           <form onSubmit={handleJoinGame}>
             <label>Game Code</label>
@@ -278,7 +276,7 @@ export default function HomePage() {
 
       <FooterBar />
 
-      {/* AI BOTTOM SHEET */}
+      {/* Bottom Sheet */}
       {sheetOpen && (
         <>
           <div className="sheet-overlay open" onClick={closeSheet}></div>
@@ -298,27 +296,27 @@ export default function HomePage() {
                   value={sheetCategory}
                   onChange={(e) => setSheetCategory(e.target.value)}
                 >
-                 <option value="">Choose a category</option>
-                   <option value="Custom">Custom category</option>
-                   <option>Animals</option>
-                   <option>Countries</option>
-                   <option>US States</option>
-                   <option>NFL Players</option>
-                   <option>NBA Players</option>
-                   <option>MLB Players</option>
-                   <option>NHL Players</option>
-                   <option>Famous Actors</option>
-                   <option>Famous Singers</option>
-                   <option>Famous Duos</option>
-                   <option>Breakfast Foods</option>
-                   <option>Vehicles</option>
-                   <option>Brands</option>
-                   <option>Cartoon Characters</option>
-                   <option>Superheroes</option>
-                   <option>Cities</option>
-                   <option>Video Games</option>
-                   <option>Animals With Fur</option>
-                   <option>Sports Teams</option>
+                  <option value="">Choose a category</option>
+                  <option value="Custom">Custom category</option>
+                  <option>Animals</option>
+                  <option>Countries</option>
+                  <option>US States</option>
+                  <option>NFL Players</option>
+                  <option>NBA Players</option>
+                  <option>MLB Players</option>
+                  <option>NHL Players</option>
+                  <option>Famous Actors</option>
+                  <option>Famous Singers</option>
+                  <option>Famous Duos</option>
+                  <option>Breakfast Foods</option>
+                  <option>Vehicles</option>
+                  <option>Brands</option>
+                  <option>Cartoon Characters</option>
+                  <option>Superheroes</option>
+                  <option>Cities</option>
+                  <option>Video Games</option>
+                  <option>Animals With Fur</option>
+                  <option>Sports Teams</option>
                 </select>
               </div>
 
