@@ -206,6 +206,7 @@ public class DecoyGenerationService {
             6. Users are local to america, answers that can be global are best keep to united states  
             7. Sometimes a populate answer is okay, but I dont typically want a really common word to be the first choice for any category; Ie try to avoid things like New york or LA. for "cities" 
             8. REALLY try not to use the most common, first to mind answers, dont be afraid to dig deeper everyone in a while
+            9. For any animals, do NOT make them the same animal, ie European Hedgehog / African Pygmy Hedgehog
           """;
     }
 }
