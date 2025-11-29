@@ -1,0 +1,325 @@
+/* ROOT COLORS COME FROM GLOBAL STYLES */
+
+/* ----------------------------------------
+   Layout / Page Root
+----------------------------------------- */
+
+.lobby-root {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+/* Header already styled globally through LobbyHeader */
+
+hr {
+  border: none;
+  border-top: 1px solid #333;
+  margin: 2rem auto;
+  max-width: 600px;
+  width: 90%;
+}
+
+/* ----------------------------------------
+   LOBBY CARD (pre-start screen)
+----------------------------------------- */
+
+.lobby-card {
+  background: var(--panel);
+  padding: 2rem;
+  border-radius: 16px;
+  max-width: 600px;
+  width: 90%;
+  margin: 2rem auto 0 auto;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.lobby-details {
+  margin-bottom: 1.5rem;
+
+  p {
+    margin: 0.4rem 0;
+    font-size: 1.05rem;
+  }
+}
+
+.lobby-description {
+  margin-top: 1rem;
+  color: var(--subtext);
+  font-size: 0.95rem;
+}
+
+.lobby-code-label {
+  font-size: 1rem;
+  color: var(--subtext);
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.lobby-code-display {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: 4px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  text-shadow: 0 0 12px rgba(0, 255, 204, 0.35);
+}
+
+
+
+.lobby-code-wrapper {
+  margin-bottom: 1rem;
+}
+
+/* Player Count */
+
+.player-count {
+  margin-top: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* Host Start Button */
+
+.start-container {
+  margin-top: 1.5rem;
+}
+
+.start-button,
+.disabled-button {
+  width: 100%;
+  padding: 0.9rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  border: none;
+}
+
+.start-button {
+  background: var(--secondary);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.start-button:hover {
+  background: #7373ff;
+}
+
+.disabled-button {
+  background: #333;
+  color: #aaa;
+}
+
+/* Non-host waiting text */
+
+.waiting-message {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  color: var(--subtext);
+}
+
+/* ----------------------------------------
+   ROUND VIEW STYLES
+----------------------------------------- */
+
+.round-root {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.round-root .card {
+  background: var(--panel);
+  padding: 2rem;
+  border-radius: 16px;
+  max-width: 600px;
+  width: 90%;
+  margin: 2rem auto 0 auto;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.round-root h1 {
+  margin-bottom: 1rem;
+}
+
+.category-label {
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+
+  span {
+    color: var(--accent);
+  }
+}
+
+.word {
+  background: #2b2b2b;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.round-root .impostor-alert {
+  color: var(--danger) !important;
+  font-weight: 700;
+  font-size: 1.7rem;
+  margin-bottom: 0.5rem;
+}
+
+
+.new-round {
+  margin-top: 1.5rem;
+  background: var(--secondary);
+  color: white;
+  padding: 0.9rem 1.4rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.new-round:hover {
+  background: #7373ff;
+}
+
+/* ----------------------------------------
+   BOTTOM SHEET (AI suggestions)
+----------------------------------------- */
+
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 20;
+}
+
+.sheet-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.bottom-sheet {
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, calc(100% - 12px)); /* raised slightly */
+  bottom: 0;
+
+  width: 100%;
+  max-width: 600px;
+
+  background: var(--panel);
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.7);
+
+  padding: 1rem 1.25rem calc(env(safe-area-inset-bottom) + 1.5rem);
+  z-index: 30;
+
+  transition: transform 0.25s ease;
+}
+
+.bottom-sheet.open {
+  transform: translate(-50%, 0);
+}
+
+.sheet-grabber {
+  width: 40px;
+  height: 4px;
+  border-radius: 999px;
+  background: #444;
+  margin: 0 auto 0.75rem auto;
+}
+
+.sheet-header h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+
+.sheet-header p {
+  margin: 0.3rem 0 1rem 0;
+  font-size: 0.9rem;
+  color: var(--subtext);
+}
+
+.sheet-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sheet-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.sheet-label {
+  font-size: 0.9rem;
+  color: var(--subtext);
+  text-align: left;
+}
+
+.sheet-select,
+.sheet-input {
+  width: 100%;
+  padding: 0.85rem;
+  border-radius: 8px;
+  border: none;
+  background: #2b2b2b;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.sheet-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.sheet-buttons button {
+  flex: 1;
+  padding: 0.85rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.btn-secondary {
+  background: #2b2b2b;
+  color: var(--text);
+}
+
+.btn-secondary:hover {
+  background: #3a3a3a;
+}
+
+.sheet-result {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: #202020;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+.sheet-result-title {
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.sheet-status {
+  font-size: 0.85rem;
+  color: var(--subtext);
+}
+
+.sheet-status.error {
+  color: var(--danger);
+}

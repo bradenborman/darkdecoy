@@ -18,29 +18,59 @@ public class LobbyService {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    public Lobby createLobby(String hostName, String mode, String hostId) {
+
+    // --------------------------------------------
+    // CREATE LOBBY (now includes prompt settings)
+    // --------------------------------------------
+    public Lobby createLobby(String hostName,
+                             String mode,
+                             String hostId,
+                             String prompt,
+                             String decoyPrompt,
+                             boolean impostorKnows) {
+
         String id = generateCode();
+
         Player host = new Player(hostId, hostName, false);
+
         Lobby lobby = new Lobby(id, hostId, mode);
         lobby.getPlayers().add(host);
+
+        // store round settings up front, new behavior
+        lobby.setPrompt(prompt);
+        lobby.setDecoyPrompt(decoyPrompt);
+        lobby.setImpostorKnows(impostorKnows);
+
         lobbyRepository.save(lobby);
         return lobby;
     }
 
+
+    // --------------------------------------------
+    // JOIN LOBBY
+    // --------------------------------------------
     public Lobby joinLobby(String lobbyId, String name, String playerId) {
         Lobby lobby = lobbyRepository.findById(lobbyId)
                 .orElseThrow(() -> new IllegalArgumentException("Lobby not found"));
 
         lobby.getPlayers().removeIf(p -> p.getId().equals(playerId));
+
         Player player = new Player(playerId, name, false);
         lobby.getPlayers().add(player);
 
         lobbyRepository.save(lobby);
-        messagingTemplate.convertAndSend("/topic/lobby/" + lobbyId, lobby); // scoped to lobby
+
+        // send updated player list to lobby subscribers
+        messagingTemplate.convertAndSend("/topic/lobby/" + lobbyId, lobby);
+
         return lobby;
     }
 
-    public Lobby startGame(String lobbyId, String prompt, String decoyPrompt, String roundHostId, boolean impostorKnows) {
+
+    // --------------------------------------------
+    // START GAME (no prompt or decoy here anymore)
+    // --------------------------------------------
+    public Lobby startGame(String lobbyId, String hostId) {
         Lobby lobby = lobbyRepository.findById(lobbyId)
                 .orElseThrow(() -> new IllegalArgumentException("Lobby not found"));
 
@@ -48,28 +78,38 @@ public class LobbyService {
             throw new IllegalStateException("At least 4 players are required to start the game.");
         }
 
-        lobby.setPrompt(prompt);
-        lobby.setDecoyPrompt(decoyPrompt);
         lobby.setGameStarted(true);
-        lobby.setRoundHostId(roundHostId);
-        lobby.setImpostorKnows(impostorKnows);
+        lobby.setRoundHostId(hostId);
 
+        // clear impostor marks first
         lobby.getPlayers().forEach(p -> p.setImpostor(false));
 
-        List<Player> eligiblePlayers = new ArrayList<>();
+        // impostor cannot be host
+        List<Player> eligibleImpostors = new ArrayList<>();
         for (Player p : lobby.getPlayers()) {
-            if (!p.getId().equals(roundHostId)) eligiblePlayers.add(p);
+            if (!p.getId().equals(hostId)) {
+                eligibleImpostors.add(p);
+            }
         }
 
-        Player impostor = eligiblePlayers.get(new Random().nextInt(eligiblePlayers.size()));
+        Player impostor = eligibleImpostors.get(
+                new Random().nextInt(eligibleImpostors.size())
+        );
+
         impostor.setImpostor(true);
 
         lobbyRepository.save(lobby);
-        messagingTemplate.convertAndSend("/topic/lobby/" + lobbyId + "/start", lobby); // scoped to lobby
+
+        // notify all connected players that game has started
+        messagingTemplate.convertAndSend("/topic/lobby/" + lobbyId + "/start", lobby);
+
         return lobby;
     }
 
 
+    // --------------------------------------------
+    // UTILITY
+    // --------------------------------------------
     public Lobby getLobby(String id) {
         return lobbyRepository.findById(id).orElse(null);
     }
