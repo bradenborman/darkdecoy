@@ -2,4 +2,4 @@ server:
   port: ${PORT:8080}
 openai:
   api:
-    key: xxx
+    key: ${OPEN_API_KEY}
