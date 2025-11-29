@@ -215,7 +215,7 @@ export default function LobbyPage() {
           </button>
         </div>
 
-        <footer>Dark Decoy © 2025</footer>
+        <footer>Dark Decoy ● Braden Borman ● 2025 </footer>
       </div>
     );
   }

@@ -248,12 +248,6 @@ export default function HomePage() {
               </button>
             </form>
           )}
-
-          <p className="help-text">
-            <strong>In the Dark</strong>: One player gets no word.
-            <br />
-            <strong>With Decoy</strong>: One player gets a similar fake word.
-          </p>
         </div>
 
         {/* JOIN GAME */}
