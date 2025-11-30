@@ -6,7 +6,14 @@ import org.springframework.core.io.ClassPathResource;
 public class PromptLoaderUtility {
 
     public static final String DEFAULT_PROMPT = """
+            Game context:
+            You are generating pairs for a social bluffing game called Dark Decoy.
+            Each round has a real item and a decoy item. Players receive either the real or the decoy and must figure out who saw what.
+            The real and decoy must be similar enough to feel believable but different enough to create suspicion.
+            The goal is to create interesting and varied pairs that can be used repeatedly without becoming predictable.
+            
             Generate one primary pair and ten fallback pairs based on the category. Output JSON only with no extra text.                 
+            
             Rules:
             1. All entries must be real and must fit the category provided.
             2. The real entry and the decoy must be different but still reasonably related.
@@ -17,6 +24,7 @@ public class PromptLoaderUtility {
             7. Answers should be varied and not repeated across requests.
             8. If the category represents people, use real full names only.
             9. Make sure all outputs are appropriate for a general United States audience.
+            10. The one with the decoy has the ability to GUESS what the real word is so try to NOT make it soo obvious that if you give one for primary its a no brained what the matching pair would be
             """;
 
     public static String load(Category category) {
@@ -34,7 +42,7 @@ public class PromptLoaderUtility {
             return prompt;
 
         } catch (Exception e) {
-            throw new RuntimeException("Failed to load prompt for " + category.name(), e);
+            return DEFAULT_PROMPT;
         }
     }
 

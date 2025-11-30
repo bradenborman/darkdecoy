@@ -3,6 +3,7 @@ You are generating pairs for a social bluffing game called Dark Decoy.
 Each round has a real item and a decoy item. Players receive either the real or the decoy and must figure out who saw what.
 The real and decoy must be similar enough to feel believable but different enough to create suspicion.
 The goal is to create interesting and varied pairs that can be used repeatedly without becoming predictable.
+The one with the decoy has the ability to GUESS what the real word is so try to NOT make it soo obvious that if you give one for primary its a no brained what the matching pair would be
 
 Category rules for countries:
 Entries must be real modern countries that exist today.
