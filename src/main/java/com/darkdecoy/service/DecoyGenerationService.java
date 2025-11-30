@@ -3,8 +3,10 @@ package com.darkdecoy.service;
 import com.darkdecoy.model.DecoyPair;
 import com.darkdecoy.model.DecoyBatch;
 import com.darkdecoy.model.GeneratedWord;
+import com.darkdecoy.model.enums.Category;
 import com.darkdecoy.repository.GeneratedWordRepository;
 
+import com.darkdecoy.utlities.PromptLoaderUtility;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -78,14 +80,22 @@ public class DecoyGenerationService {
         Map<String, Object> requestBody = Map.of(
                 "model", "gpt-4o-mini",
                 "messages", List.of(
-                        Map.of("role", "system", "content", buildSystemPrompt()),
-                        Map.of("role", "user", "content",
-                                "Category: " + category + "\n" +
-                                        "Return JSON exactly in the structure:\n" +
+                        Map.of(
+                                "role", "system",
+                                "content", PromptLoaderUtility.load(Category.fromString(category))
+                        ),
+                        Map.of(
+                                "role", "user",
+                                "content",
+                                "The category is: " + category + "\n" +
+                                        "Return valid JSON only. Use the exact structure below with no extra text:\n" +
                                         "{\n" +
-                                        "  \"primary\": { \"real\": \"...\", \"decoy\": \"...\", \"category\": \"" + category + "\" },\n" +
-                                        "  \"fallbacks\": [ { \"real\": \"...\", \"decoy\": \"...\", \"category\": \"" + category + "\" }, ... ]\n" +
-                                        "}\n"
+                                        "  \"primary\": { \"real\": \"\", \"decoy\": \"\", \"category\": \"" + category + "\" },\n" +
+                                        "  \"fallbacks\": [\n" +
+                                        "    { \"real\": \"\", \"decoy\": \"\", \"category\": \"" + category + "\" }\n" +
+                                        "  ]\n" +
+                                        "}\n" +
+                                        "Provide exactly one primary pair and exactly ten fallback pairs.\n"
                         )
                 ),
                 "response_format", Map.of("type", "json_object")

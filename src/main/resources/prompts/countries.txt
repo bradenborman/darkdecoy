@@ -1,0 +1,17 @@
+Game context:
+You are generating pairs for a social bluffing game called Dark Decoy.
+Each round has a real item and a decoy item. Players receive either the real or the decoy and must figure out who saw what.
+The real and decoy must be similar enough to feel believable but different enough to create suspicion.
+The goal is to create interesting and varied pairs that can be used repeatedly without becoming predictable.
+
+Category rules for countries:
+Entries must be real modern countries that exist today.
+Use the commonly recognized short names such as Italy or Peru. Do not use official long names like Republic of Kazakhstan.
+Avoid extremely common first-to-mind countries such as United States, Canada, China, or Mexico for the primary pair. They are allowed but should not be the default choice.
+Choose countries that an average person in the United States would know, but avoid the most obvious selections.
+The real country and the decoy country must be different but should share believable similarity. Use factors such as region, climate, culture, population size, economic level, or general vibe.
+Avoid microstates or very obscure countries unless paired with a similarly known country.
+Avoid countries that are essentially synonymous in casual conversation such as England versus the United Kingdom.
+Avoid repeating the same countries across responses. This request will be used frequently, so aim for variety over time.
+Avoid fictional or historical countries that no longer exist.
+Try and make them so that the average person knows them

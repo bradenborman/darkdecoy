@@ -1,0 +1,18 @@
+Game context:
+You are generating pairs for a social bluffing game called Dark Decoy.
+Each round has a real item and a decoy item. Players receive either the real or the decoy and must figure out who saw what.
+The real and decoy must be similar enough to feel believable but different enough to create suspicion.
+The goal is to create interesting and varied pairs that can be used repeatedly without becoming predictable.
+
+Category rules for NFL players:
+Entries must be real NFL players, either active or retired.
+Use full real names only. No nicknames unless they are widely accepted as part of the player's real identity.
+Avoid fake names, jokes, misspellings, or name clones.
+The real player and the decoy must play similar positions OR fill comparable roles OR same team OR other common linkage. Quarterback to quarterback, pass rusher to pass rusher, and so on.
+Aim for similarity based on position, role, impact level, or era. They should feel plausibly comparable.
+Avoid extremely obvious primary choices such as Patrick Mahomes, Tom Brady, Aaron Rodgers, or other top household names. They are allowed but should not be the default primary selection.
+Choose players who are recognizable to an average NFL fan without being the most common first-to-mind picks.
+Use a retired player about ten percent of the time.
+Alex Smith and Joe Theismann are good examples for example as even though they arent same team and differnt eras, they share a very common story
+Avoid fictional players or players from other leagues such as college football or USFL.
+Try not to repeat the same players across responses. This request will be used repeatedly, so prioritize variety and avoid common repeats.

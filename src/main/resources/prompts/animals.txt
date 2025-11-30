@@ -1,0 +1,16 @@
+Game context:
+You are generating pairs for a social bluffing game called Dark Decoy.
+Each round has a real item and a decoy item. Players receive either the real or the decoy and must figure out who saw what.
+The real and decoy must be similar enough to feel believable but different enough to create suspicion.
+The goal is to create interesting and varied pairs that can be used repeatedly without becoming predictable.
+
+Category rules for animals:
+Entries must be real animals that most people in the United States would recognize.
+Use simple common names only such as Beaver or Raccoon. Do not use scientific names or region-specific names like North American Beaver.
+Do not use two versions of the same animal such as European Hedgehog and African Pygmy Hedgehog. The real entry and the decoy must be completely different species.
+Avoid extremely common first-to-mind animals like Dog, Cat, Lion, or Tiger for the primary pair. They are allowed but should not be the default choice.
+Choose animals that people broadly know but that are not the most obvious choices.
+Avoid fictional or extinct animals.
+The decoy should be somewhat similar in habitat, size, or general animal family. For example two woodland animals, two desert animals, two large mammals, and so on.
+Keep the choices varied and avoid repeating the same animals across requests.
+This request will be used frequently, so try to avoid repeating common animals across responses to reduce duplicates over time.
