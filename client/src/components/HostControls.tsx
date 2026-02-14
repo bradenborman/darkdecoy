@@ -65,6 +65,7 @@ export default function HostControls({
             Impostor knows they are the impostor
           </label>
 
+          {/* AI feature temporarily disabled
           <button
             type="button"
             id="openAutoSheet"
@@ -73,6 +74,7 @@ export default function HostControls({
           >
             Need help thinking of words?
           </button>
+          */}
         </>
       )}
 

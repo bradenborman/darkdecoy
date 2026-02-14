@@ -228,6 +228,7 @@ export default function HomePage() {
                     <span>Impostor knows they are the Impostor</span>
                   </div>
 
+                  {/* AI feature temporarily disabled
                   <button
                     type="button"
                     onClick={openSheet}
@@ -235,6 +236,7 @@ export default function HomePage() {
                   >
                     Need help thinking of words?
                   </button>
+                  */}
                 </>
               )}
 
