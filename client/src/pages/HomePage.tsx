@@ -225,7 +225,7 @@ export default function HomePage() {
                       checked={impostorKnows}
                       onChange={(e) => setImpostorKnows(e.target.checked)}
                     />
-                    <span>Impostor knows the word</span>
+                    <span>Impostor knows they are the Impostor</span>
                   </div>
 
                   <button
